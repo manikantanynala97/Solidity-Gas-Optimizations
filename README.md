@@ -1,4 +1,3 @@
-Gas Optimizations in Solidity
 In this tutorial, we will learn about some of the gas optimization techniques in Solidity. This has been one of our most-requested levels, so let's get started without further ado 👀
 
 Tips and Tricks
@@ -11,17 +10,20 @@ Packing your variables means that you pack or put together variables of smaller 
 
 Given two code samples:
 
-uint8 num1;
-uint256 num2;
-uint8 num3;
-uint8 num4;
-uint8 num5;
-uint8 num1;
-uint8 num3;
-uint8 num4;
-uint8 num5;
-uint256 num2;
-The second one is better because in the second one solidity compiler will put all the uint8's in one storage slot but in the first case it will put uint8 num1 in one slot but now the next one it will see is a uint256 which is in itself requires 32 bytes cause 256/8 bits = 32 bytes so it cant be put in the same storage slot as uint8 num1 so now it will require another storage slot. After that uint8 num3, num4, num5 will be put in another storage slot. Thus the second example requires 3 storage slots as compared to the first example which requires only two storage slots.
+         uint8 num1;
+         uint256 num2;
+         uint8 num3;
+         uint8 num4;
+         uint8 num5;
+         
+         uint8 num1;
+          uint8 num3;
+          uint8 num4;
+          uint8 num5;
+          uint256 num2;
+
+
+The second one is better because in the second one solidity compiler will put all the uint8's in one storage slot but in the first case it will put uint8 num1 in one slot but now the next one it will see is a uint256 which is in itself requires 32 bytes cause 256/8 bits = 32 bytes so it cant be put in the same storage slot as uint8 num1 so now it will require another storage slot. After that uint8 num3, num4, num5 will be put in another storage slot. Thus the second example requires 2 storage slots as compared to the first example which requires 3 storage slots.
 
 It's also important to note that elements in memory and calldata cannot be packed and are not optimized by solidity's compiler.
 
@@ -102,3 +104,5 @@ Make sure that the error strings in your require statements are of very short le
 require(counter >= 100, "NOT REACHED"); //good
 require(balance >= amount, "Counter is still to reach the value greater than or equal to 100, ............................................";
 The first requirement is more gas optimized than the second one.
+
+NOTE: In newer versions of Solidity, there are now custom errors using the error keyword which behave very similar to events and can achieve similar gas optimizations.
